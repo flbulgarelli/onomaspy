@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-This is a skeleton file that can serve as a starting point for a Python
-console script. To run this script uncomment the following lines in the
-[options.entry_points] section in setup.cfg:
-
-    console_scripts =
-         fibonacci = onomaspy.skeleton:run
-
 Then run `python setup.py install` which will install the command `fibonacci`
 inside your current environment.
 Besides console scripts, the header (i.e. until _logger...) of this file can
@@ -27,21 +20,6 @@ __license__ = "gpl3"
 
 _logger = logging.getLogger(__name__)
 
-
-def fib(n):
-    """Fibonacci example function
-
-    Args:
-      n (int): integer
-
-    Returns:
-      int: n-th Fibonacci number
-    """
-    assert n > 0
-    a, b = 1, 1
-    for i in range(n-1):
-        a, b = b, a+b
-    return a
 
 
 def parse_args(args):
