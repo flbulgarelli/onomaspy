@@ -65,6 +65,9 @@ class Class(Enum):
 
   @staticmethod
   def ambiguous_center(classes):
+    if not classes:
+      return False
+
     if classes[0] == Class.OTHER:
       return Class.ambiguous_center(classes[1:])
 

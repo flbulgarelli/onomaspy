@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-from onomaspy.personal_name import PersonalName, FullName, GivenAndFamily
-from onomaspy.registry import Registry, RegistryOptions
-from onomaspy.name_divider import NameBreaker, NameSplitter
+
+from onomaspy import *
 
 names = [
   "Franco",

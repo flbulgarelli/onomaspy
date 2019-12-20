@@ -12,17 +12,11 @@ import sys
 import logging
 
 from onomaspy import __version__
+from onomaspy import *
 
 __author__ = "Franco Bulgarelli"
 __copyright__ = "Franco Bulgarelli"
 __license__ = "gpl3"
-
-
-
-
-# Available options:
-#   -b,--break-full-names    Force split of ambiguous full names
-
 
 def parse_args(args):
   """Parse command line parameters
@@ -36,24 +30,18 @@ def parse_args(args):
   parser = argparse.ArgumentParser(
       description="Make inferences about personal names")
   parser.add_argument(
+      "givens_file",
+      help="givens filename",
+      type=str)
+  parser.add_argument(
+      "families_file",
+      help="families filename",
+      type=str)
+  parser.add_argument(
       "-v",
       "--version",
       action="version",
       version="onomaspy {ver}".format(ver=__version__))
-  parser.add_argument(
-      "-g",
-      "--givens",
-      dest="givens_file",
-      help="givens filename",
-      type=str,
-      metavar="FILE")
-  parser.add_argument(
-      "-f",
-      "--families",
-      dest="families_file",
-      help="families filename",
-      type=str,
-      metavar="FILE")
   parser.add_argument(
       "-F",
       "--file",
@@ -82,11 +70,53 @@ def parse_args(args):
       dest="unknown_as_family",
       help="Treat unknown names as family names",
       type=bool)
+  parser.add_argument(
+      "-b",
+      "--break-full-names",
+      dest="break_full_names",
+      help="Force split of ambiguous full names",
+      type=bool)
   return parser.parse_args(args)
 
 def read_lines(path):
   with open(path) as f:
-    return f.readlines()
+    return map(lambda l:l.strip(), f.readlines())
+
+def select_divider(break_names):
+  return BreakNames() if break_names else NameSplitter()
+
+def format_name(format, name):
+  return name
+# selectFormat :: String -> Format
+# selectFormat "tagged" = tagged
+# selectFormat "csv"    = csv
+# selectFormat _        = padded
+
+
+# tagged :: Format
+# tagged (FullName names)       = "FullName:" ++ intercalate " " names
+# tagged (GivenAndFamily gs fs) = "GivenAndFamily:" ++ intercalate " " gs ++ "," ++ intercalate " " fs
+
+# csv :: Format
+# csv (FullName names)       = intercalate " " names
+# csv (GivenAndFamily gs fs) = intercalate " " gs ++ "," ++ intercalate " " fs
+
+# padded :: Format
+# padded (FullName names)       = ",," ++ intercalate " " names
+# padded (GivenAndFamily gs fs) = intercalate " " gs ++ "," ++ intercalate " " fs
+
+
+def process_line(registry, format, divider, line):
+  print(format_name(format, line_to_name(line).fix(registry, divider)))
+
+def line_to_name(line):
+  return FullName(prepare(line))
+
+def prepare(line):
+  return list(
+          filter(lambda l: l,
+            map(lambda l: l.strip().title(),
+              line.replace(",", "").split(" "))))
 
 def main(args):
   """Main entry point allowing external calls
@@ -101,11 +131,10 @@ def main(args):
 
   options = RegistryOptions(transliterate_names = args.transliterate, treat_unknown_as_family = args.unknown_as_family)
   registry = Registry.make(givens, familes, options)
-  contents = sys.stdin.readlines() if args.file == "--" else read_lines(args.file)
+  contents = sys.stdin.readlines() if args.input_file == "--" else read_lines(args.input_file)
 
-
-  # print("The {}-th Fibonacci number is {}".format(args.n, fib(args.n)))
-
+  for line in contents:
+    process_line(registry, args.output_format, select_divider(args.break_full_names), line)
 
 def run():
   """Entry point for console_scripts
@@ -117,32 +146,4 @@ if __name__ == "__main__":
   run()
 
 
- # for_ (lines contents) (processLine registry (selectFormat outputFormat) (selectDivider breakFullNames))
-# selectDivider :: Bool -> NameDivider
-# selectDivider False = splitNames
-# selectDivider _     = justBreakNames
 
-# processLine :: Registry -> Format ->  NameDivider -> String -> IO ()
-# processLine registry format divider = putStrLn  . format . fix registry divider . FullName . map unpack . prepare . pack
-
-# type Format = PersonalName -> String
-
-# selectFormat :: String -> Format
-# selectFormat "tagged" = tagged
-# selectFormat "csv"    = csv
-# selectFormat _        = padded
-
-# tagged :: Format
-# tagged (FullName names)       = "FullName:" ++ intercalate " " names
-# tagged (GivenAndFamily gs fs) = "GivenAndFamily:" ++ intercalate " " gs ++ "," ++ intercalate " " fs
-
-# csv :: Format
-# csv (FullName names)       = intercalate " " names
-# csv (GivenAndFamily gs fs) = intercalate " " gs ++ "," ++ intercalate " " fs
-
-# padded :: Format
-# padded (FullName names)       = ",," ++ intercalate " " names
-# padded (GivenAndFamily gs fs) = intercalate " " gs ++ "," ++ intercalate " " fs
-
-# prepare :: Text -> [Text]
-# prepare = filter (not . T.null) . map (toTitle . strip) . splitOn " " . replace "," " "

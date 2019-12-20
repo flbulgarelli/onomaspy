@@ -67,6 +67,9 @@ class FullName(PersonalName):
   def __eq__(self, other):
       return self.__class__ == other.__class__ and self.names == other.names
 
+  def __repr__(self):
+    return 'FullName(%s)' % self.names
+
   def analyze(self, registry, divider):
     return divider.try_divide(list(map(lambda n: Name.make_singleton(registry, n), self.names)))
 
