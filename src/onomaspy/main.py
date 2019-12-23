@@ -28,7 +28,7 @@ def parse_args(args):
     :obj:`argparse.Namespace`: command line parameters namespace
   """
   parser = argparse.ArgumentParser(
-      description="Make inferences about personal names")
+      description="Deterministic classifier for personal names")
   parser.add_argument(
       "givens_file",
       help="givens filename",

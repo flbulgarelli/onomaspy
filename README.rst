@@ -20,6 +20,7 @@ information on PyScaffold see https://pyscaffold.org/.
 
 
 .. code-block:: bash
+
     usage: onomaspy [-h] [-v] [-F FILE] [-o tagged|csv|padded] [-t TRANSLITERATE]
                     [-u UNKNOWN_AS_FAMILY] [-b BREAK_FULL_NAMES]
                     givens_file families_file
