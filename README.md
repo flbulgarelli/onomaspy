@@ -1,4 +1,5 @@
-# onomastic
+# onomaspy
+
 > Deterministic classifier for personal names
 
 
@@ -189,3 +190,62 @@ GivenAndFamily:Franco Leonardo,Bulgarelli Manfroni
 * titles, initials and nicknames
 * gender
 * compound names like `Juan Cruz` or `María de los Angeles`
+
+
+## Development
+
+### Installation
+
+TL;DR setup:
+
+```bash
+$ ./devinit
+```
+
+Basic setup:
+
+```bash
+# Create and active a virtual env
+$ python3 -m venv .venv
+$ source .venv/bin/activate
+# install the project
+$ pip install -e .
+```
+
+Install testing dependencies:
+
+```bash
+$ pip install -e .[testing]
+```
+
+Install `tox` for full test, build and publish lifecycle:
+
+```bash
+$ pip install tox
+```
+
+### Run tests
+
+```bash
+# basic, quick run
+$ pytest
+# run as part of standard tox lifecycle
+$ tox
+```
+
+### Publish project
+
+```bash
+# update package version in setup.cfg
+# them run these command:
+$ git tag <version>
+$ git push origin HEAD --tags
+# clean project
+$ tox -e clean
+# build the package
+$ tox -e build
+# publish to test.pypi
+$ tox -e publish
+# publish to real pypi
+$ tox -e --publish -- --repository pypi
+```

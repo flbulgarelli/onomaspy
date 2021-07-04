@@ -9,14 +9,11 @@ Make inferences about personal names
 Description
 ===========
 
-A longer description of your project goes here...
+onomastic` is an algorithm for classifying personal names deterministically, using given and family names lists. `onomastic` tries to minimize misclassifications, and does not make inferences about ambiguous personal names unless forced to do so.
 
 
 Note
 ====
-
-This project has been set up using PyScaffold 3.2.3. For details and usage
-information on PyScaffold see https://pyscaffold.org/.
 
 
 .. code-block:: bash

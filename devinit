@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "Creating virtual env..."
+python3 -m venv .venv
+source .venv/bin/activate
+
+echo "Installing tox..."
+pip install tox
+
+echo "Performing initial project installation..."
+pip install -e .
+pip install -e .[testing]
+
+echo "Done!"
+echo "Now active your venv:"
+echo "  source .venv/bin/activate"
